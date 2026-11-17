@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Airbound | Operations</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/timeline.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="/" aria-label="Airbound Operations home"><span class="brand-mark">A</span><span>airbound<span class="brand-sub">FLIGHT OPERATIONS</span></span></a>
+      <div class="nav-label">WORKSPACE</div>
+      <a class="nav-item active" href="#overview"><span class="nav-icon">▦</span> Operations overview</a>
+      <a class="nav-item" href="#orders"><span class="nav-icon">▤</span> Delivery orders <span class="nav-count" id="nav-order-count">0</span></a>
+      <a class="nav-item" href="#flights"><span class="nav-icon">⌁</span> Flight planning</a>
+      <div class="sidebar-bottom"><div class="hub-dot"></div><div><strong>North Hub</strong><small>Operational · Bengaluru</small></div><span class="chevron">⌄</span></div>
+    </aside>
+
+    <main class="main" id="overview">
+      <header class="topbar"><div class="breadcrumb">Workspace <span>/</span> Operations</div><div class="top-actions"><span class="live-pill"><i></i> System operational</span><div class="avatar">AS</div></div></header>
+      <section class="page-heading"><div><div class="eyebrow">MONDAY, NOVEMBER 17, 2026 <span class="heading-dot">·</span> NORTH HUB</div><h1>Operations overview</h1><p>Coordinate deliveries and keep every flight moving.</p></div><button class="button button-primary" id="new-order-jump"><span>＋</span> New delivery</button></section>
+      <div class="notice" id="notice" role="status" aria-live="polite"></div>
+
+      <section class="metrics" aria-label="Operations summary">
+        <article class="metric"><div class="metric-top"><span>Active deliveries</span><span class="metric-icon icon-blue">↗</span></div><strong id="metric-active">—</strong><small><span class="metric-foot" id="metric-active-foot">Across all statuses</span></small></article>
+        <article class="metric"><div class="metric-top"><span>Awaiting dispatch</span><span class="metric-icon icon-amber">◷</span></div><strong id="metric-awaiting">—</strong><small>Orders ready for a flight</small></article>
+        <article class="metric"><div class="metric-top"><span>Flights planned</span><span class="metric-icon icon-violet">⌁</span></div><strong id="metric-flights">—</strong><small>Upcoming scheduled routes</small></article>
+        <article class="metric"><div class="metric-top"><span>Delivered today</span><span class="metric-icon icon-green">✓</span></div><strong id="metric-delivered">—</strong><small>Completed handoffs</small></article>
+      </section>
+
+      <section class="panel orders-panel" id="orders">
+        <div class="panel-head"><div><div class="panel-title">Delivery orders <span class="count-chip" id="order-total">0</span></div><p>Track parcels from pickup through handoff.</p></div><div class="panel-tools"><label class="search-box"><span>⌕</span><input id="order-search" type="search" placeholder="Search orders" aria-label="Search orders"></label><select id="priority-filter" class="select-compact" aria-label="Filter by priority"><option value="all">All priorities</option><option value="urgent">Urgent</option><option value="standard">Standard</option></select></div></div>
+        <div class="table-wrap"><table><thead><tr><th>ORDER</th><th>RECIPIENT</th><th>ROUTE</th><th>WEIGHT</th><th>PRIORITY</th><th>STATUS</th><th></th></tr></thead><tbody id="orders-body"><tr><td colspan="7" class="empty-cell">Loading orders…</td></tr></tbody></table></div>
+        <div class="panel-foot"><span id="orders-shown">Showing 0 deliveries</span><span class="table-key"><i></i> Updated live</span></div>
+      </section>
+
+      <section class="lower-grid">
+        <section class="panel form-panel">
+          <div class="panel-head compact-head"><div><div class="panel-title">Create delivery</div><p>Add a parcel to the dispatch queue.</p></div><span class="step-icon">01</span></div>
+          <form id="order-form" class="form-grid">
+            <label>Order reference<input name="reference" placeholder="e.g. AB-1042" required maxlength="40"></label>
+            <label>Recipient<input name="recipient" placeholder="Full name" required></label>
+            <label>Pickup location<input name="pickup" value="North Hub" required></label>
+            <label>Drop-off location<input name="dropoff" placeholder="Clinic, home, etc." required></label>
+            <label>Package weight <span class="unit">kg</span><input name="package_weight_kg" type="number" min="0.1" max="25" step="0.1" placeholder="1.2" required></label>
+            <label>Priority<select name="priority"><option value="standard">Standard</option><option value="urgent">Urgent</option></select></label>
+            <button class="button button-primary form-submit" type="submit">Add to queue <span>→</span></button>
+          </form>
+        </section>
+
+        <section class="panel flights-panel" id="flights">
+          <div class="panel-head compact-head"><div><div class="panel-title">Flight planning</div><p>Schedule a route and assign parcels.</p></div><span class="step-icon">02</span></div>
+          <form id="flight-form" class="form-grid flight-form">
+            <label>Flight code<input name="flight_code" placeholder="FLT-208" required></label>
+            <label>Drone ID<input name="drone_id" placeholder="DR-12" required></label>
+            <label>Pilot<input name="pilot" placeholder="Pilot name" required></label>
+            <label>Departure<input name="departure_at" type="datetime-local" required></label>
+            <label>Origin<input name="origin" value="North Hub" required></label>
+            <label>Destination<input name="destination" placeholder="Destination" required></label>
+            <label class="full-span">Payload capacity <span class="unit">kg</span><input name="capacity_kg" type="number" min="0.1" step="0.1" placeholder="8" required></label>
+            <button class="button button-secondary form-submit" type="submit">Create flight plan <span>→</span></button>
+          </form>
+          <div class="flight-list-head"><strong>Upcoming flights</strong><span id="flight-total">0 planned</span></div>
+          <div id="flight-list" class="flight-list"><div class="muted-empty">No flights planned yet.</div></div>
+          <form id="assign-form" class="assign-row"><select name="flight_id" id="assign-flight" required aria-label="Flight"><option value="">Select flight</option></select><select name="order_id" id="assign-order" required aria-label="Order"><option value="">Select order</option></select><button class="button button-dark" type="submit">Assign</button></form>
+        </section>
+      </section>
+      <footer class="footer"><span>Airbound Operations Management</span><span>Prototype · Data stored locally</span></footer>
+    </main>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>
